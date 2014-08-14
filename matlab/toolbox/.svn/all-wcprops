@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/cir/!svn/ver/12018/code/neuro/FuncGeometryRegistration/toolbox
+END
+DEMO.m
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/DEMO.m
+END
+atlas_sparse_cross_distance.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_sparse_cross_distance.m
+END
+atlas_cluster_atlas_points.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_cluster_atlas_points.m
+END
+atlas_groupwise_registration_orthonormal.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_groupwise_registration_orthonormal.m
+END
+defaultParams.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/defaultParams.m
+END
+atlas_sparse_cross_corrcoef.m
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_sparse_cross_corrcoef.m
+END
+atlas_generate_diffusion_map.m
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_generate_diffusion_map.m
+END
+atlas_build_functional_map.m
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_build_functional_map.m
+END
+atlas_sparse_node_match.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_sparse_node_match.m
+END
+atlas_weighted_align_shapes_nd.m
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_weighted_align_shapes_nd.m
+END
+atlas_normalized_laplacian_eigs.m
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_normalized_laplacian_eigs.m
+END
+atlas_sparse_corrcoef.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/cir/!svn/ver/12019/code/neuro/FuncGeometryRegistration/toolbox/atlas_sparse_corrcoef.m
+END

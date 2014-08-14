@@ -1,0 +1,197 @@
+function [map,W] = atlas_build_functional_map(data, p, verbose)
+% Function to build a functional geometry map from fMRI data
+% *** This is a preliminary release, please don't distribute ***
+%
+% INPUT:
+% data.BOLD ... BOLD signal data, each row corresponds to one voxel, each
+% column to one time point
+%
+% Georg Langs
+% 23.9.2011
+%
+
+if ~exist('verbose', 'var') || isempty(verbose)
+    verbose = false;
+end
+
+data.NonZeroIndices = max(abs(data.BOLD),[],2)>0;
+
+%% Set parameters:
+
+
+p.do_save_memory = 1;
+% 0 ... create corr coef matrix densely then create sparse
+% 1 ... create corr coef matrix sparsely (saves memory at expense of proc time)
+do_define_gamma = 1;
+% 0 ... nothing
+% 1 ... define diffusion map coordinates
+
+dp.map_dimension = 20;
+dp.delta = [];
+dp.diffusion_time = 2;
+
+dp.n_eigs = 50;
+dp.epsilon = -1;
+
+dp.min_corr_sum = 100;
+dp.min_density = -1; % if negative then automatically choose better than chance
+
+dp.keep_negative_correlations = 0;
+dp.alpha = 0;
+
+
+dp.thresh_type = 'significance';
+dp.significance_thresh = 0.01;
+
+% dp.thresh_type = 'correlation';
+% dp.correlation_thresh = 0.6;
+
+% dp.sampling_type = 'corr_sum'; 
+dp.sampling_type = 'all';
+
+p = defaultParams(p,dp);
+
+
+%% Create correlation coefficient matrix
+
+if verbose
+    disp('Generating correlation matrix ...');
+end
+tic;
+if p.do_save_memory
+    
+    if (strcmp(p.thresh_type, 'significance'))
+        GCT = atlas_sparse_corrcoef(data.BOLD(data.NonZeroIndices,:)', p.significance_thresh, p.thresh_type, p.keep_negative_correlations, verbose);
+        
+    elseif (strcmp(p.thresh_type, 'correlation'))
+        GCT = atlas_sparse_corrcoef(data.BOLD(data.NonZeroIndices,:)', p.correlation_thresh, p.thresh_type, p.keep_negative_correlations, verbose);
+    else
+        error('No other threshold types available yet. ')
+    end
+    
+else
+    GC = corrcoef(data.BOLD(data.NonZeroIndices,:)');
+    
+    if (strcmp(p.thresh_type, 'correlation'))
+        GCT = sparse(GC.*(GC > correlation_thresh));
+    else
+        error('No other threshold types available yet. ')
+    end
+    
+    GCT(isnan(GCT)) = 0;
+    clear GC
+end
+if verbose
+    disp(['... done in ', num2str(toc), 's']);
+end
+
+%% Calculate the degree of the nodes, and discard nodes with degree below threshold
+if verbose
+    disp('Generating and sampling affinity matrix ...'); tic;
+end
+n_nodes = numel(data.NonZeroIndices);
+
+% automatically determine epsilon if required
+if ( p.epsilon < 0 )
+    epsilon_used = median(nonzeros(GCT));
+    if verbose
+        disp(['Determined epsilon = ', num2str(epsilon_used), ' , from median.']);
+    end
+else
+    epsilon_used = epsilon;
+end
+
+W = sparse(n_nodes, n_nodes);
+W(GCT~=0) = exp(GCT(GCT~=0) / epsilon_used);
+graph_d = full(sum(GCT~=0,1)/2)';
+if (strcmp(p.sampling_type, 'corr_sum'))
+    
+    corr_sums = full(sum(GCT));
+    nodes_kept = find(corr_sums > min_corr_sum);
+    
+elseif (strcmp(p.sampling_type, 'density'))
+    
+    d_orig = full(sum(W,2));
+    pi_orig = d_orig / sum(d_orig);
+    
+    if (p.min_density < 0)
+        nodes_kept = find(pi_orig > (1/n_nodes));
+    else
+        nodes_kept = find(pi_orig > min_density);
+    end
+elseif  (strcmp(p.sampling_type, 'all'))
+    nodes_kept = 1:size(GCT,1);
+else
+    %TODO: add no sampling approach that auto determines epsilon
+    nodes_kept = 1:size(GCT,1);
+    error('Sampling type not recognized.')
+end
+if verbose
+    disp(['... done in ', num2str(toc), 's']);
+end
+
+n_nodes_kept = numel(nodes_kept);
+map.NodeIndices = data.NonZeroIndices(nodes_kept);
+
+W = W(nodes_kept, nodes_kept);
+
+% normalize by power of density according to family parameter
+d = full(sum(W,2));
+inv_D_alpha = spdiags(d.^-p.alpha, 0, n_nodes_kept, n_nodes_kept);
+W = inv_D_alpha*W*inv_D_alpha;
+
+%% Get eigenvectors of normalized laplacian
+if verbose
+    disp('Taking eigendecomposition of normalized laplacian ...'); tic;
+end
+[MsEigenvectors, MsEigenvalues] = atlas_normalized_laplacian_eigs(W, p.n_eigs);
+if verbose
+    disp(['... done in ', num2str(toc), 's']);
+end
+
+%% Write values into map structure
+map.Epsilon = epsilon_used;
+
+if (strcmp(p.thresh_type, 'significance'))
+    map.SignificanceThreshold = p.significance_thresh;
+elseif (strcmp(p.thresh_type, 'correlation'))
+    map.CorrelationThreshold = p.correlation_thresh;
+end
+
+map.ThresholdType = p.thresh_type;
+map.MinimumNodeDegree = p.min_corr_sum;
+map.MinimumDensity = p.min_density;
+map.SamplingType = p.sampling_type;
+map.Alpha = p.alpha;
+map.GraphDegrees = graph_d;
+map.Degrees = d;
+map.MsEigenvectors = MsEigenvectors;
+map.MsEigenvalues = MsEigenvalues;
+
+
+%% 4.) Create Functional Maps
+
+[map.Gamma, determined_param] = atlas_generate_diffusion_map(map.MsEigenvectors, map.MsEigenvalues, map.Degrees, p.map_dimension, p.diffusion_time, p.delta);
+
+if (isempty(p.diffusion_time))
+    if verbose
+        disp(['Determined diffusion time  = ', num2str(determined_param)]);
+    end
+    map.DeterminedDiffusionTime = determined_param;
+elseif (isempty(p.map_dimension))
+    if verbose
+        disp(['Determined map dimension  = ', num2str(determined_param)]);
+    end
+    map.DeterminedMapDimension = determined_param;
+elseif (isempty(p.delta))
+    if verbose
+        disp(['Determined delta  = ', num2str(determined_param)]);
+    end
+    map.DeterminedDelta = determined_param;
+end
+
+map.Gamma(1,1)
+
+map.Delta = p.delta;
+map.DiffusionTime = p.diffusion_time;
+map.MapDimension = p.map_dimension;
