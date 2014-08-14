@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem
+END
+perform_varEM_dd_fullcov.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem/perform_varEM_dd_fullcov.m
+END
+perform_varEM_dd_j1.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem/perform_varEM_dd_j1.m
+END
+updatePhis_dd_danial.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem/updatePhis_dd_danial.m
+END
+updateClusters.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem/updateClusters.m
+END
+updateRho_dd_danial.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem/updateRho_dd_danial.m
+END
+updateZs.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem/updateZs.m
+END
+updateClusters_new.m
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem/updateClusters_new.m
+END
+calculateGibbs_dd_danial.m
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/medicalvision1/!svn/ver/277/code/2010_FunctionalMaps/core/varem/calculateGibbs_dd_danial.m
+END

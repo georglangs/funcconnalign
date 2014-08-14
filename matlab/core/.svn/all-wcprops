@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/medicalvision1/!svn/ver/284/code/2010_FunctionalMaps/core
+END
+distortion_minimization.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/medicalvision1/!svn/ver/149/code/2010_FunctionalMaps/core/distortion_minimization.m
+END
+graph_cluster_stability.m
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/medicalvision1/!svn/ver/218/code/2010_FunctionalMaps/core/graph_cluster_stability.m
+END
+defaultParams.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/medicalvision1/!svn/ver/176/code/2010_FunctionalMaps/core/defaultParams.m
+END
+iterative_coarse_grain_graph.m
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/medicalvision1/!svn/ver/149/code/2010_FunctionalMaps/core/iterative_coarse_grain_graph.m
+END
+fsl_trans_image_points.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/medicalvision1/!svn/ver/186/code/2010_FunctionalMaps/core/fsl_trans_image_points.m
+END
+calculate_posterior_prob_wrt_atlasclusters.m
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/medicalvision1/!svn/ver/284/code/2010_FunctionalMaps/core/calculate_posterior_prob_wrt_atlasclusters.m
+END
+sparse_corrcoef_fast.m
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/medicalvision1/!svn/ver/180/code/2010_FunctionalMaps/core/sparse_corrcoef_fast.m
+END
+generate_diffusion_map.m
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/medicalvision1/!svn/ver/195/code/2010_FunctionalMaps/core/generate_diffusion_map.m
+END
+sparse_cross_distance_fast.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/medicalvision1/!svn/ver/218/code/2010_FunctionalMaps/core/sparse_cross_distance_fast.m
+END
+diffusion_map_lifting.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/medicalvision1/!svn/ver/149/code/2010_FunctionalMaps/core/diffusion_map_lifting.m
+END
+weightedAlignShapesND.m
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/medicalvision1/!svn/ver/168/code/2010_FunctionalMaps/core/weightedAlignShapesND.m
+END
+compare_partitions.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/medicalvision1/!svn/ver/180/code/2010_FunctionalMaps/core/compare_partitions.m
+END
+sparse_cross_corrcoef_fast.m
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/medicalvision1/!svn/ver/180/code/2010_FunctionalMaps/core/sparse_cross_corrcoef_fast.m
+END
+funcmap_visualize2.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/medicalvision1/!svn/ver/149/code/2010_FunctionalMaps/core/funcmap_visualize2.m
+END
+diffusion_map_restriction.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/medicalvision1/!svn/ver/194/code/2010_FunctionalMaps/core/diffusion_map_restriction.m
+END
+fg_calculate_functional_geometry_from_signals.m
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/medicalvision1/!svn/ver/182/code/2010_FunctionalMaps/core/fg_calculate_functional_geometry_from_signals.m
+END
+unique_matches.m
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/medicalvision1/!svn/ver/149/code/2010_FunctionalMaps/core/unique_matches.m
+END
+visualizeClusterSignalsAcrossSubjects.m
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/medicalvision1/!svn/ver/280/code/2010_FunctionalMaps/core/visualizeClusterSignalsAcrossSubjects.m
+END
+multibar_plot.m
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/medicalvision1/!svn/ver/180/code/2010_FunctionalMaps/core/multibar_plot.m
+END
+coarse_grain_graph.m
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/medicalvision1/!svn/ver/168/code/2010_FunctionalMaps/core/coarse_grain_graph.m
+END
+normalized_laplacian_eigs.m
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/medicalvision1/!svn/ver/168/code/2010_FunctionalMaps/core/normalized_laplacian_eigs.m
+END
+concatenateFuncMaps.m
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/medicalvision1/!svn/ver/153/code/2010_FunctionalMaps/core/concatenateFuncMaps.m
+END
+my_errorbar.m
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/medicalvision1/!svn/ver/149/code/2010_FunctionalMaps/core/my_errorbar.m
+END
