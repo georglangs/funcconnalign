@@ -1,0 +1,13 @@
+demo
+    create_functional_map
+        sparse_corrcoef
+        diffusion_eigs
+            sorted_eigs
+        laplacian_eigs
+            sorted_eigs
+        create_diffusion_map
+
+    align_group
+        sparse_xdistance
+        sparse_xcorrcoef
+        align_points
