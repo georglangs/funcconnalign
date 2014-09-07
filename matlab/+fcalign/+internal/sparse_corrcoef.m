@@ -12,22 +12,22 @@ function [s, r, c] = sparse_corrcoef(X, threshold, varargin)
 % OPTIONAL INPUTS
 % threshold_type    what to threshold
 %                   string from:
-%                       'correlation': Pearson correlation coefficient (default)
+%                       'correlation' (default): Pearson correlation coefficient
 %                       'significance': Bonferroni corrected p-value of Pearson correlation coef
 % keep_negatives    threshold absolute values
 %                   boolean (default = false)
-% nonzero_max       maximum number of non-zero values we expect to get
-%                   integer (default = ???)
+% nonzero_prop      maximum proportion of non-zero values we expect to get
+%                   0 < double <= 1 (default = 0.02)
 % growth_rate       fraction of vector size to expand by when number of non-zeros exceeds
-%                   0 < double
+%                   0 < double (default = 0.25)
 % verbose           if true, display messages about progress
-%                   boolean (true)
+%                   boolean (default = true)
 %
 % OUTPUTS
 % s                 if only s is output, then this is the sparse correlation matrix
-%                   sparse nxn double
+%                       sparse nxn double
 %                   o.w. this is the dense vector of values exceeding the threshold
-%                   nnz x 1 double
+%                       nnz x 1 double
 % r                 row indices of nonzero matrix values
 %                   nnz x 1 integer
 % c                 column indices of nonzero matrix values
@@ -35,32 +35,26 @@ function [s, r, c] = sparse_corrcoef(X, threshold, varargin)
 
 [n, p] = size(X);
 
+% parse inputs
 parser = inputParser;
-parser.addRequired('X', @(x) ismatrix(x) && isnumeric(x));
-parser.addRequired('threshold', @(x) isscalar(x) && isnumeric(x));
+parser.addRequired('X', @(x) validateattributes(x, {'numeric'}, {'2d'}));
+parser.addRequired('threshold', @(x) validateattributes(x, {'numeric'}, {'scalar'}));
 parser.addParameter('threshold_type', 'correlation', @(x) validatestring(x, {'correlation', 'significance'}));
-parser.addParameter('keep_negatives', false, @(x) isscalar(x) && islogical(x));
-parser.addParameter('nonzero_max', , @(x) isscalar(x) && isnumeric(x) && ~mod(x, 1));
-parser.addParameter('growth_rate', 0.25, @(x) isscalar(x) && isnumeric(x) && (x > 0));
-parser.addParameter('verbose', false, @(x) isscalar(x) && islogical(x));
+parser.addParameter('keep_negatives', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
+parser.addParameter('nonzero_prop', 0.02, @(x) validateattributes(x, {'double'}, {'scalar', '>', 0, '<=', 1}));
+parser.addParameter('growth_rate', 0.25, @(x) validateattributes(x, {'double'}, {'scalar', '>', 0, '<=', 1}));
+parser.addParameter('verbose', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
 parser.parse(X, threshold, varargin{:});
 inputs = parser.Results;
 
-% if we're not given the expected max number of nonzeros, then assume sparsity won't exceed 1/50
-if ~exist('nonzero_max', 'var') || isempty(nonzero_max)
-    nonzero_max = ceil((p^2)/50);
-    if verbose
-        disp(['using auto nonzero_max ', num2str(nonzero_max)]);
-    end
-end
+% further process inputs
+inputs.nonzero_max = ceil(p^2 * inputs.nonzero_prop);
+growth = ceil(inputs.growth_rate * inputs.nonzero_max);
 
-r = zeros(nonzero_max, 1);
-c = zeros(nonzero_max, 1);
-s = zeros(nonzero_max, 1);
-
-% we grow these these vectors if they're full at a rate proportional to the original max
-growth_rate = 0.5;
-growth = int32(growth_rate*nonzero_max);
+% initialize index and value vectors
+r = zeros(inputs.nonzero_max, 1);
+c = zeros(inputs.nonzero_max, 1);
+s = zeros(inputs.nonzero_max, 1);
 
 % note that correlation coef matrix always has main diagonal of 1s (we use
 % 0.5 because later we add the matrix in lower triangular form to its
@@ -76,46 +70,49 @@ stds = std(X)';
 % zero mean all observations once
 zmX = X - repmat(means', n, 1);
 
-normalizer = 1/(n-1);
+normalizer = 1 / (n-1);
 
 % find correlations by variable, building lower triangular corr coef matrix
 nnz = p;
-for i=1:(p-1)
-
-    if verbose
-        if (~mod(i,500))
-            disp(['calculated for ', num2str(i), ' variables']);
-        end
-    end
+if inputs.verbose
+    fprintf('Computing sparse corrcoef: %03u%%', 0);
+end
+for i = 1:(p-1)
 
     % the unnnormalized covariance calc for the ith variable with the other n-i variables involves multiplying the matrix of observations of these other variables with the column of observations for the ith variable
-    unnorm_covs = zmX(:,i+1:end)'*zmX(:,i);
+    unnorm_covs = zmX(:,i+1:end)' * zmX(:,i);
 
     % normalize by constant to get covariance, then element wise by vector of standard deviation products to get correlation coefs
-    cs = normalizer * unnorm_covs ./ (stds(i+1:end)*stds(i));
+    cs = normalizer * unnorm_covs ./ (stds(i+1:end) * stds(i));
 
+    % update progress
+    if inputs.verbose
+        fprintf('\b\b\b\b%03u%%', floor(i / p * 100));
+    end
+    
     % find the values that should be nonzero and their inds
-    if (strcmp(thresh_type, 'significance'))
+    switch inputs.threshold_type
+        case 'significance'
+            n_dofs = n - 2;
+            n_comparisons = p*(p-1)/2;
 
-        n_dofs = n - 2;
-        n_comparisons = p*(p-1)/2;
+            ts = cs .* (n_dofs ./ (1 - cs.^2)).^0.5;
 
-        ts = cs .* (n_dofs ./ (1 - cs.^2)).^0.5;
-
-        if (keep_negatives)
-            t_thresh = tinv(1 - 0.5*thresh/n_comparisons, n_dofs);
-            nonzero_inds = find((ts > t_thresh) | (ts < -t_thresh));
-        else
-            t_thresh = tinv(1 - thresh/n_comparisons, n_dofs);
-            nonzero_inds = find(ts > t_thresh);
-        end
-
-    else
-        if (keep_negatives)
-            nonzero_inds = find((cs > thresh) | (cs < -thresh));
-        else
-            nonzero_inds = find(cs > thresh);
-        end
+            if inputs.keep_negatives
+                t_thresh = tinv(1 - 0.5*inputs.threshold / n_comparisons, n_dofs);
+                nonzero_inds = find((ts > t_thresh) | (ts < -t_thresh));
+            else
+                t_thresh = tinv(1 - inputs.threshold / n_comparisons, n_dofs);
+                nonzero_inds = find(ts > t_thresh);
+            end
+        case 'correlation'
+            if inputs.keep_negatives
+                nonzero_inds = find((cs > inputs.threshold) | (cs < -inputs.threshold));
+            else
+                nonzero_inds = find(cs > inputs.threshold);
+            end
+        otherwise
+            error('fcalign:sparse_corrcoef:threshold_type_unrecognized', 'Threshold type %s is not recognized', inputs.threshold_type);
     end
 
     nonzero_cs = cs(nonzero_inds);
@@ -123,7 +120,7 @@ for i=1:(p-1)
     % if adding these takes us over max, then add some more space
     % (proportion to original max)
     nnz_cs = length(nonzero_cs);
-    if ( nnz + nnz_cs > length(s) )
+    if (nnz + nnz_cs) > length(s)
         r = [r; zeros(growth, 1)];
         c = [c; zeros(growth, 1)];
         s = [s; zeros(growth, 1)];
@@ -142,12 +139,15 @@ for i=1:(p-1)
 end
 
 if (nargout > 1)
-    % knock off zero elements
     r(s == 0) = [];
     c(s == 0) = [];
     s(s == 0) = [];
-
 else
     upper_tri = sparse(r(1:nnz), c(1:nnz), s(1:nnz), p, p, 2*nnz - p);
     s = upper_tri + upper_tri';
+end
+
+if inputs.verbose
+    fprintf('\b\b\b\b%03u%%', 100);
+    fprintf('\n');
 end

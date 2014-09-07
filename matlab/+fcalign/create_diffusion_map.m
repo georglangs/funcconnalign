@@ -1,4 +1,4 @@
-function map = create_diffusion_map(V, l, d, dim, t, delta)
+function map = create_diffusion_map(V, l, d, varargin)
 % generates diffusion map coordinates from the eigendecomposition of the normalized laplacian
 %
 % *** This is a preliminary release, please don't distribute ***
@@ -13,7 +13,7 @@ function map = create_diffusion_map(V, l, d, dim, t, delta)
 % d                 degrees of correlation matrix
 %                   n x 1 double
 %
-% OPTIONAL INPUTS (see below for note)
+% OPTIONAL INPUTS
 % dim               number of map dimensions
 %                   1 <= integer <= k (default = k)
 % t                 diffusion time (default = 1)
@@ -30,21 +30,24 @@ function map = create_diffusion_map(V, l, d, dim, t, delta)
 %                       determined_param: parameter left empty on input and determined from other 2
 %                       Psi: right eigenvectors of Markov matrix
 %                       Phi: left eigenvectors of Markov matrix
-%
-% Andy Sweet 24/08/2014
 
-%% parse inputs
+% parse inputs
 parser = inputParser();
 parser.addRequired('V', @(x) validateattributes(x, {'double'}, {'2d'}));
 parser.addRequired('l', @(x) validateattributes(x, {'double'}, {'vector'}));
 parser.addRequired('d', @(x) validateattributes(x, {'double'}, {'vector'}));
-parser.addOptional('dim', [], @(x) validateattributes(x, {'numeric'}, {'scalar', 'positive', 'integer'}));
-parser.addOptional('t', [], @(x) validateattributes(x, {'double'}, {'scalar', 'positive'}));
-parser.addOptional('delta', [], @(x) validateattributes(x, {'double'}, {'scalar'}));
-parser.parse(V, l, d, dim, t, delta);
+parser.addParameter('dim', [], @(x) validateattributes(x, {'numeric'}, {'scalar', 'positive', 'integer'}));
+parser.addParameter('t', [], @(x) validateattributes(x, {'double'}, {'scalar', 'positive'}));
+parser.addParameter('delta', [], @(x) validateattributes(x, {'double'}, {'scalar'}));
+parser.parse(V, l, d, varargin{:});
+inputs = parser.Results;
 
 % further process inputs
 [n, k] = size(V);
+
+dim = inputs.dim;
+t = inputs.t;
+delta = inputs.delta;
 
 if length(l) ~= k
     error('fcalign:create_diffusion_map:l_is_wrong_size', 'length of l must be same as number of columns in V');
@@ -54,9 +57,8 @@ if length(d) ~= n
     error('fcalign:create_diffusion_map:d_is_wrong_size', 'length of d must be same as number of rows in V');
 end
 
-if (isempty(dim) + isempty(t) + isempty(delta)) ~= 2
-
-    error('fcalign:create_diffusion_map:wrong_number_of_optionals', 'exactly 2 of dim, t and delta must be provided')
+if (isempty(dim) + isempty(t) + isempty(delta)) ~= 1
+    error('fcalign:create_diffusion_map:wrong_number_of_optionals', 'exactly 2 of dim, t and delta must be provided');
 end
 
 % determine one of the parameters
@@ -85,7 +87,7 @@ elseif isempty(t)
 
 elseif isempty(delta)
     % use diffusion time and dimensionality to determine delta
-    delta = (l(p) / l(2))^t;
+    delta = (l(dim) / l(2))^t;
 
     map.diffusion_time = t;
     map.delta = delta;
@@ -110,4 +112,4 @@ end
 
 % construct diffusion map coordinates
 Lt = spdiags(l(1:dim).^t, 0, dim, dim);
-map.Gamma = Psi*Lt;
+map.Gamma = map.Psi*Lt;
