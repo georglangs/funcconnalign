@@ -1,51 +1,49 @@
-classdef Create_Diffusion_Map_Test < fcalign.test.Fc_Align_Test
+classdef Create_Diffusion_Map_Test_Case < fcalign.test.Test_Case
 % tests different usages of creating a diffusion map    
 
     methods (Test)
         
-        function test_default(testCase)
+        function test_default(this)
         % tests default usage of creating a functional map
         
             % define parameters
             n = 16;
-            p = 29;
+            s = 32;
             k = 7;
-            dim = 5;
+            p = 5;
             t = 1;
             
-            % make a positive definite matrix
-            rng(0);
-            data = rand(n, p);
-            matrix = data * data';
+            % create a correlation matrix
+            matrix = this.create_correlation_matrix('n', n, 's', s);
             
             % get the laplacian eigs
-            [V, l, d] = fcalign.internal.laplacian_eigs(matrix, k);
+            [V, l, d] = fcalign.internal.laplacian_eigs(matrix.W, k);
             
             % create the expected sparse correlation matrix
             norm_factor = sqrt(sum(d));
             inv_sqrt_D = spdiags(d.^-0.5, 0, n, n);
             sqrt_D = spdiags(d.^0.5, 0, n, n);
-            expected.Phi = sqrt_D*V(:, 1:dim) / norm_factor;
-            expected.Psi = norm_factor * inv_sqrt_D*V(:, 1:dim);
+            expected.Phi = sqrt_D*V(:, 1:p) / norm_factor;
+            expected.Psi = norm_factor * inv_sqrt_D*V(:, 1:p);
 
             if expected.Psi(1, 1) < 0
                 expected.Phi = expected.Phi * -1;
                 expected.Psi = expected.Psi * -1;
             end
             
-            Lt = spdiags(l(1:dim).^t, 0, dim, dim);
+            Lt = spdiags(l(1:p).^t, 0, p, p);
             expected.Gamma = expected.Psi*Lt;
 
             expected.diffusion_time = t;
-            expected.map_dimension = dim;
-            expected.delta = (l(dim) / l(2))^t;
+            expected.map_dimension = p;
+            expected.delta = (l(p) / l(2))^t;
             expected.determined_param = 'delta';
             
             % create correlation matrix using method
-            actual = fcalign.create_diffusion_map(V, l, d, 'dim', dim, 't', t);
+            actual = fcalign.create_diffusion_map(V, l, d, 'dim', p, 't', t);
 
             % verify that expected correlation
-            testCase.verify_equal_diffusion_map(actual, expected);
+            this.verify_equal_diffusion_map(actual, expected);
         end
         
     end

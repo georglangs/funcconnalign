@@ -11,11 +11,11 @@ function [rotation, translation, S_mean, T_mean] = align_points(T, S, weights, t
 % weights               vector of weights, the ith weight corresponds to how much we care about aligning the ith source point
 %                       n x 1 double (default = ones(n, 1))
 % transform_type        type of transformation
-%                       string form
+%                       string form (default = 'rigid')
 %                           - 'rotation': determinant is 1
 %                           - 'orthonormal': allow flips (determinant can be -1 or +1)
-%                           - 'rigid': rotation and translation (default)
-%                           - 'scale_orthonormal': incorporates global scale factor
+%                           - 'rigid': rotation and translation
+%                           - 'scale': incorporates global scale factor
 %
 % OUTPUTS
 % rotation              rotation/orthonormal matrix from source to target points

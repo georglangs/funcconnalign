@@ -1,4 +1,4 @@
-function [atlas, mymaps,p] = align_group(mymaps, p, verbose)
+function [atlas, mymaps, p] = align_functional_maps(maps, p, verbose)
 %
 % function performs groupwise registration among a set of maps
 % each map contains

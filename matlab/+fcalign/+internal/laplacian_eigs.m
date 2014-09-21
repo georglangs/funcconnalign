@@ -1,7 +1,7 @@
 function [V, l, d] = laplacian_eigs(W, k, varargin)
 % finds the eigendecomposition of the normalized Laplacian of a matrix
 %
-% [V, l, d] = diffusion_eigs(W, k, center)
+% [V, l, d] = laplacian_eigs(W, k, center)
 %
 % REQUIRED INPUTS
 % W         affinity matrix
