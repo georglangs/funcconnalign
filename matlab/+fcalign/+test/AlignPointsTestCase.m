@@ -8,13 +8,13 @@ function test_default(this)
 
     % define parameters
     n = 16;
-    p = 3;
+    s = 3;
 
     % create some data points
-    points = this.create_data(n, p);
+    points = this.create_data('n', n, 's', s);
 
     % define a transform and transform the points
-    expected_transform = fcalign.create_transform(p);
+    expected_transform = this.create_transform(s);
     transformed_points = fcalign.transform_points(points, expected_transform);
 
     % estimate the transform

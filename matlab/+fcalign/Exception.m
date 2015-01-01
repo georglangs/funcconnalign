@@ -1,5 +1,5 @@
 classdef Exception < MException
-% an exception in the fcalign package
+    % an exception in the fcalign package
 
 methods
 

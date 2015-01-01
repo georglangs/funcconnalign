@@ -1,5 +1,5 @@
 classdef SystemException < fcalign.Exception
-% a system exception in the fcalign package
+    % a system exception in the fcalign package
 
 methods
 

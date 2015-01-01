@@ -21,7 +21,6 @@ function map = create_diffusion_map(V, l, d, varargin)
 %   diffusion time (default = 1)
 % delta : double
 %   threshold of ratio between extreme eigenvalues
-%                   double
 %
 % Returns
 % -------

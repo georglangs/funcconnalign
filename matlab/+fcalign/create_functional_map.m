@@ -71,7 +71,7 @@ if inputs.verbose
     tic_id = tic;
 end
 
-[V, l, d] = fcalign.internal.laplacian_eigs(W, inputs.number_eigs, 'center', inputs.center_eigs);
+[V, l, d] = fcalign.laplacian_eigs(W, inputs.number_eigs, 'center', inputs.center_eigs);
 
 if inputs.verbose
     fprintf('... done in %g s\n', toc(tic_id));

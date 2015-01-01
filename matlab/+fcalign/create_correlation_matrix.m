@@ -54,7 +54,7 @@ end
 
 data_non_zeros = data(matrix.non_zeros, :);
 if inputs.save_memory
-    matrix.W = fcalign.internal.sparse_corrcoef(data_non_zeros', inputs.threshold, 'keep_negatives', inputs.keep_negatives, 'verbose', inputs.verbose);
+    matrix.W = fcalign.sparse_corrcoef(data_non_zeros', inputs.threshold, 'keep_negatives', inputs.keep_negatives, 'verbose', inputs.verbose);
 else
     matrix.W = corrcoef(data_non_zeros');
     to_keep = matrix.W > inputs.threshold;
