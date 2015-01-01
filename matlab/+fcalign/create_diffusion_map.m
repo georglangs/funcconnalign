@@ -1,44 +1,43 @@
 function map = create_diffusion_map(V, l, d, varargin)
 % generates diffusion map coordinates from the eigendecomposition of the normalized laplacian
 %
-% *** This is a preliminary release, please don't distribute ***
-%
 % Also normalizes the left and right eigenvectors so they have norm 1 w.r.t. the stationary distribution.
-%
-% REQUIRED INPUTS
-% V                 eigenvectors of normalized laplacian
-%                   n x k double
-% l                 (1 - eigenvalues) of normalized laplacian
-%                   1 x k double
-% d                 degrees of correlation matrix
-%                   n x 1 double
-%
-% OPTIONAL INPUTS
-% dim               number of map dimensions
-%                   1 <= integer <= k (default = k)
-% t                 diffusion time (default = 1)
-%                   1 <= double
-% delta             threshold of ratio between extreme eigenvalues
-%                   double
-%
 % Note that exactly 2 of p, t and delta must be provided (the other is automatically determined)
 %
-% OUTPUTS
-% map               diffusion map
-%                   struct containing:
-%                       Gamma: diffusion map coordinates (including redundant first coordinate)
-%                       determined_param: parameter left empty on input and determined from other 2
-%                       Psi: right eigenvectors of Markov matrix
-%                       Phi: left eigenvectors of Markov matrix
-
-% parse inputs
+% Arguments
+% ---------
+% V : n x k double
+%   eigenvectors of normalized laplacian
+% l : 1 x k double
+%   (1 - eigenvalues) of normalized laplacian
+% d : n x 1 double
+%   degrees of correlation matrix
+%
+% Keyword Arguments
+% -----------------
+% dim : 1 <= integer <= k
+%   number of map dimensions (default = k)
+% t : 1 <= double
+%   diffusion time (default = 1)
+% delta : double
+%   threshold of ratio between extreme eigenvalues
+%                   double
+%
+% Returns
+% -------
+% map : struct
+%   diffusion map struct containing:
+%   Gamma - diffusion map coordinates (including redundant first coordinate);
+%   determined_param - parameter left empty on input and determined from other 2;
+%   Psi - right eigenvectors of Markov matrix;
+%   Phi - left eigenvectors of Markov matrix;
 parser = inputParser();
 parser.addRequired('V', @(x) validateattributes(x, {'double'}, {'2d'}));
 parser.addRequired('l', @(x) validateattributes(x, {'double'}, {'vector'}));
 parser.addRequired('d', @(x) validateattributes(x, {'double'}, {'vector'}));
-parser.addParameter('dim', [], @(x) validateattributes(x, {'numeric'}, {'scalar', 'positive', 'integer'}));
-parser.addParameter('t', [], @(x) validateattributes(x, {'double'}, {'scalar', 'positive'}));
-parser.addParameter('delta', [], @(x) validateattributes(x, {'double'}, {'scalar'}));
+parser.addParamValue('dim', [], @(x) validateattributes(x, {'numeric'}, {'scalar', 'positive', 'integer'}));
+parser.addParamValue('t', [], @(x) validateattributes(x, {'double'}, {'scalar', 'positive'}));
+parser.addParamValue('delta', [], @(x) validateattributes(x, {'double'}, {'scalar'}));
 parser.parse(V, l, d, varargin{:});
 inputs = parser.Results;
 
@@ -50,15 +49,15 @@ t = inputs.t;
 delta = inputs.delta;
 
 if length(l) ~= k
-    error('fcalign:create_diffusion_map:l_is_wrong_size', 'length of l must be same as number of columns in V');
+    throw(fcalign.Exception('InvalidAttribute', 'length of l must be same as number of columns in V'));
 end
 
 if length(d) ~= n
-    error('fcalign:create_diffusion_map:d_is_wrong_size', 'length of d must be same as number of rows in V');
+    throw(fcalign.Exception('InvalidAttribute', 'length of d must be same as number of rows in V'));
 end
 
 if (isempty(dim) + isempty(t) + isempty(delta)) ~= 1
-    error('fcalign:create_diffusion_map:wrong_number_of_optionals', 'exactly 2 of dim, t and delta must be provided');
+    throw(fcalign.Exception('TooManyArguments', 'exactly 2 of dim, t and delta must be provided'));
 end
 
 % determine one of the parameters

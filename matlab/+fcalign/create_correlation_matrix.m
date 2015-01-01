@@ -1,42 +1,37 @@
 function matrix = create_correlation_matrix(data, threshold, varargin)
 % creates a sparse correlation matrix from fMRI data
 %
-% *** This is a preliminary release, please don't distribute ***
+% Arguments
+% ---------
+% Y : n x t double
+%   fMRI data for single subject (each row is a time series)
+% threshold : -1 <= double <= 1
+%   only keep correlations above this threshold
 %
-% REQUIRED INPUTS
-% Y                 fMRI data for single subject (each row is a time series)
-%                   n x t double
-% threshold         only keep correlations above this threshold
-%                   -1 <= double <= 1
+% Keyword Arguments
+% -----------------
+% keep_negatives : logical
+%   if true, use absolute correlations (default = false)
+% save_memory : logical
+%   if true, create correlation matrix sparsely to save memory (default = true)
+% min_density : 0 <= double <= 1
+%   if negative, automatically choose better than chance (default = 0)
+% verbose : logical
+%   if true, prints updates as text (default = false)
 %
-% OPTIONAL INPUTS
-% keep_negatives    if true, use absolute correlations
-%                   logical (default = false)
-% save_memory       if true, create correlation matrix sparsely to save memory
-%                   logical (default = true)
-% min_density       if negative, automatically choose better than chance
-%                   0 <= double <=1 (default = 0)
-% verbose           if true, prints updates as text
-%                   logical (default = false)
-%
-% OUTPUTS
-% matrix            matrix and parameters
-%                   struct:
-%                       W: correlation matrix
-%                       n' x n' double
-%                       non_zeros: non zero indices in data
-%                       n x 1 integer
-%
-% Created by Andy Sweet on 23.8.2014
-
-% parse inputs
+% Returns
+% -------
+% matrix : struct
+%   matrix and parameters, where
+%   W: correlation matrix is an n' x n' double
+%   non_zeros: non zero indices in data is an n x 1 integer
 parser = inputParser();
 parser.addRequired('data', @(x) validateattributes(x, {'numeric'}, {'2d'}));
 parser.addRequired('threshold', @(x) validateattributes(x, {'double'}, {'scalar'}));
-parser.addParameter('save_memory', true, @(x) validateattributes(x, {'logical'}));
-parser.addParameter('min_density', 0, @(x) validateattributes(x, {'double'}));
-parser.addParameter('keep_negatives', false, @(x) validateattributes(x, {'logical'}));
-parser.addParameter('verbose', false, @(x) validateattributes(x, {'logical'}));
+parser.addParamValue('save_memory', true, @(x) validateattributes(x, {'logical'}));
+parser.addParamValue('min_density', 0, @(x) validateattributes(x, {'double'}));
+parser.addParamValue('keep_negatives', false, @(x) validateattributes(x, {'logical'}));
+parser.addParamValue('verbose', false, @(x) validateattributes(x, {'logical'}));
 parser.parse(data, threshold, varargin{:});
 inputs = parser.Results;
 

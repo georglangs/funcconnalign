@@ -1,6 +1,6 @@
 function [atlas, mymaps, p] = align_functional_maps(maps, p, verbose)
+% performs groupwise registration among a set of maps
 %
-% function performs groupwise registration among a set of maps
 % each map contains
 %
 % mymaps{i}.Gamma = embedding coordinates
@@ -18,7 +18,6 @@ function [atlas, mymaps, p] = align_functional_maps(maps, p, verbose)
 %
 % Code by Georg Langs and Andy Sweet
 % 21.9.2011
-%
 
 if ~exist('verbose', 'var') || isempty(verbose)
     verbose = false;

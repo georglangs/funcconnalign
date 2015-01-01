@@ -1,53 +1,51 @@
 function [s, r, c] = sparse_corrcoef(X, threshold, varargin)
 % creates a sparse correlation coefficient matrix from a data matrix and a threshold
 %
-% function [s, r, c] = sparse_corrcoef(X, threshold, varargin)
+% Arguments
+% ---------
+% X : n x p numeric
+%   data matrix where each row is an observation
+% threshold : numeric
+%   lower threshold on correlation coefs or significance values
 %
-% REQUIRED INPUTS
-% X                 data matrix where each row is an observation
-%                   n x p double
-% threshold         lower threshold on correlation coefs or significance values
-%                   double
+% Keyword Arguments
+% -----------------
+% threshold_type : {'correlation', 'significance'}
+%   what to threshold, where
+%   'correlation' corresponds to Pearson correlation coefficient
+%   'significance' corresponds to Bonferroni corrected p values
+%   (default = 'correlation')
+% keep_negatives : boolean
+%   threshold absolute values (default = false)
+% nonzero_prop : 0 < double <= 1
+%   maximum proportion of non-zero values we expect to get (default = 0.02)
+% growth_rate : 0 < double
+%   fraction of vector size to expand by when number of non-zeros exceeds (default = 0.25)
+% verbose : boolean
+%   if true, display messages about progress (default = true)
 %
-% OPTIONAL INPUTS
-% threshold_type    what to threshold
-%                   string from:
-%                       'correlation' (default): Pearson correlation coefficient
-%                       'significance': Bonferroni corrected p-value of Pearson correlation coef
-% keep_negatives    threshold absolute values
-%                   boolean (default = false)
-% nonzero_prop      maximum proportion of non-zero values we expect to get
-%                   0 < double <= 1 (default = 0.02)
-% growth_rate       fraction of vector size to expand by when number of non-zeros exceeds
-%                   0 < double (default = 0.25)
-% verbose           if true, display messages about progress
-%                   boolean (default = true)
-%
-% OUTPUTS
-% s                 if only s is output, then this is the sparse correlation matrix
-%                       sparse nxn double
-%                   o.w. this is the dense vector of values exceeding the threshold
-%                       nnz x 1 double
-% r                 row indices of nonzero matrix values
-%                   nnz x 1 integer
-% c                 column indices of nonzero matrix values
-%                   nnz x 1 integer
+% Returns
+% -------
+% s : {n x n | nnz x 1} double
+%   if only s is output, then this is the sparse correlation matrix, o.w. this is the dense vector of values exceeding the threshold
+% r : nnz x 1 integer
+%   row indices of nonzero matrix values
+% c : nnz x 1 integer
+%   column indices of nonzero matrix values
 
-[n, p] = size(X);
-
-% parse inputs
 parser = inputParser;
 parser.addRequired('X', @(x) validateattributes(x, {'numeric'}, {'2d'}));
 parser.addRequired('threshold', @(x) validateattributes(x, {'numeric'}, {'scalar'}));
-parser.addParameter('threshold_type', 'correlation', @(x) validatestring(x, {'correlation', 'significance'}));
-parser.addParameter('keep_negatives', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
-parser.addParameter('nonzero_prop', 0.02, @(x) validateattributes(x, {'double'}, {'scalar', '>', 0, '<=', 1}));
-parser.addParameter('growth_rate', 0.25, @(x) validateattributes(x, {'double'}, {'scalar', '>', 0, '<=', 1}));
-parser.addParameter('verbose', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
+parser.addParamValue('threshold_type', 'correlation', @(x) validatestring(x, {'correlation', 'significance'}));
+parser.addParamValue('keep_negatives', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
+parser.addParamValue('nonzero_prop', 0.02, @(x) validateattributes(x, {'double'}, {'scalar', '>', 0, '<=', 1}));
+parser.addParamValue('growth_rate', 0.25, @(x) validateattributes(x, {'double'}, {'scalar', '>', 0, '<=', 1}));
+parser.addParamValue('verbose', false, @(x) validateattributes(x, {'logical'}, {'scalar'}));
 parser.parse(X, threshold, varargin{:});
 inputs = parser.Results;
 
 % further process inputs
+[n, p] = size(X);
 inputs.nonzero_max = ceil(p^2 * inputs.nonzero_prop);
 growth = ceil(inputs.growth_rate * inputs.nonzero_max);
 
@@ -89,30 +87,30 @@ for i = 1:(p-1)
     if inputs.verbose
         fprintf('\b\b\b\b%03u%%', floor(i / p * 100));
     end
-    
+
     % find the values that should be nonzero and their inds
     switch inputs.threshold_type
-        case 'significance'
-            n_dofs = n - 2;
-            n_comparisons = p*(p-1)/2;
+    case 'significance'
+        n_dofs = n - 2;
+        n_comparisons = p*(p-1)/2;
 
-            ts = cs .* (n_dofs ./ (1 - cs.^2)).^0.5;
+        ts = cs .* (n_dofs ./ (1 - cs.^2)).^0.5;
 
-            if inputs.keep_negatives
-                t_thresh = tinv(1 - 0.5*inputs.threshold / n_comparisons, n_dofs);
-                nonzero_inds = find((ts > t_thresh) | (ts < -t_thresh));
-            else
-                t_thresh = tinv(1 - inputs.threshold / n_comparisons, n_dofs);
-                nonzero_inds = find(ts > t_thresh);
-            end
-        case 'correlation'
-            if inputs.keep_negatives
-                nonzero_inds = find((cs > inputs.threshold) | (cs < -inputs.threshold));
-            else
-                nonzero_inds = find(cs > inputs.threshold);
-            end
-        otherwise
-            error('fcalign:sparse_corrcoef:threshold_type_unrecognized', 'Threshold type %s is not recognized', inputs.threshold_type);
+        if inputs.keep_negatives
+            t_thresh = tinv(1 - 0.5*inputs.threshold / n_comparisons, n_dofs);
+            nonzero_inds = find((ts > t_thresh) | (ts < -t_thresh));
+        else
+            t_thresh = tinv(1 - inputs.threshold / n_comparisons, n_dofs);
+            nonzero_inds = find(ts > t_thresh);
+        end
+    case 'correlation'
+        if inputs.keep_negatives
+            nonzero_inds = find((cs > inputs.threshold) | (cs < -inputs.threshold));
+        else
+            nonzero_inds = find(cs > inputs.threshold);
+        end
+    otherwise
+        throw(fcalign.Exception('UnrecognizedValue', 'Threshold type %s is not recognized', inputs.threshold_type));
     end
 
     nonzero_cs = cs(nonzero_inds);

@@ -1,38 +1,36 @@
 function map = create_functional_map(W, varargin)
 % creates a functional map from the given correlation matrix
 %
-% *** This is a preliminary release, please don't distribute ***
+% Arguments
+% ---------
+% W : n x n double
+%   correlation matrix
 %
-% REQUIRED INPUTS
-% W                 correlation matrix
-%                   n x n double
-%
-% OPTIONAL INPUTS
-% alpha             value defining member of alpha family
-%                   0 <= double (default = 0)
-% number_eigs       number of laplacian eigenvalues to compute
-%                   1 <= integer <= n, t (default = 50)
-% center_eigs       center laplacian
-%                   logical (default = false)
-% map_dimension     number of dimension in functional map
-%                   1 <= integer <= n, t (default = 20)
-% diffusion_time    diffusion time of functional map
-%                   0 < double (default = 2)
+% Keyword Arguments
+% -----------------
+% alpha : 0 <= double
+%   value defining member of alpha family (default = 0)
+% number_eigs : 1 <= integer <= n, t
+%   number of laplacian eigenvalues to compute (default = 50)
+% center_eigs : logical
+%   center laplacian matrix before taking eigendecomposition (default = false)
+% map_dimension : 1 <= integer <= n, t
+%   number of dimension in functional map (default = 20)
+% diffusion_time : 0 < double
+%   diffusion time of functional map (default = 2)
 
 % removed this for now
 % delta             threshold of ratio between extreme eigenvalues
 %                   double
-
-% parse inputs
 parser = inputParser();
 parser.addRequired('W', @(x) validateattributes(x, {'double'}, {'2d'}));
-parser.addParameter('alpha', [], @(x) validateattributes(x, {'double'}, {'nonnegative'}));
-parser.addParameter('number_eigs', 50, @(x) validateattributes(x, {'numeric'}, {'integer', 'positive'}));
-parser.addParameter('center_eigs', false, @(x) validateattributes(x, {'logical'}));
-parser.addParameter('map_dimension', 20, @(x) validateattributes(x, {'numeric'}, {'integer', 'positive'}));
-parser.addParameter('diffusion_time', 2, @(x) validateattributes(x, {'numeric'}, {'positive'}));
-% parser.addParameter('delta', [], @(x) validateattributes(x, {'numeric'}, {'integer', 'positive'}));
-parser.addParameter('verbose', false, @(x) validateattributes(x, {'logical'}));
+parser.addParamValue('alpha', [], @(x) validateattributes(x, {'double'}, {'nonnegative'}));
+parser.addParamValue('number_eigs', 50, @(x) validateattributes(x, {'numeric'}, {'integer', 'positive'}));
+parser.addParamValue('center_eigs', false, @(x) validateattributes(x, {'logical'}));
+parser.addParamValue('map_dimension', 20, @(x) validateattributes(x, {'numeric'}, {'integer', 'positive'}));
+parser.addParamValue('diffusion_time', 2, @(x) validateattributes(x, {'numeric'}, {'positive'}));
+% parser.addParamValue('delta', [], @(x) validateattributes(x, {'numeric'}, {'integer', 'positive'}));
+parser.addParamValue('verbose', false, @(x) validateattributes(x, {'logical'}));
 parser.parse(W, varargin{:});
 inputs = parser.Results;
 
