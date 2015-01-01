@@ -1,5 +1,5 @@
 classdef CreateFunctionalMapTestCase < fcalign.test.TestCase
-% tests different usages of creating a functional map
+    % tests different usages of creating a functional map
 
 methods (Test)
 

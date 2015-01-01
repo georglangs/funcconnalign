@@ -1,5 +1,5 @@
 classdef LaplacianEigsTestCase < fcalign.test.TestCase
-% test usage of computing the laplacian eigenvalues
+    % test usage of computing the laplacian eigenvalues
 
 methods (Test)
 

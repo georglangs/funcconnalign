@@ -1,5 +1,5 @@
 classdef (Abstract) TestCase < matlab.unittest.TestCase
-% test usage of a component of the fc align package
+    % test usage of a component of the fc align package
 
 methods (Access = protected)
 

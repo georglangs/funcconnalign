@@ -1,5 +1,5 @@
 classdef CreateDiffusionMapTestCase < fcalign.test.TestCase
-% tests different usages of creating a diffusion map
+    % tests different usages of creating a diffusion map
 
 methods (Test)
 

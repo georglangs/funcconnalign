@@ -1,5 +1,5 @@
 classdef SparseCorrcoefTestCase < fcalign.test.TestCase
-% test usage of creating a sparse correlation matrix
+    % test usage of creating a sparse correlation matrix
 
 methods (Test)
 

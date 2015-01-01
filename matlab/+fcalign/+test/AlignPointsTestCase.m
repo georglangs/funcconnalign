@@ -1,5 +1,5 @@
 classdef AlignPointsTestCase < fcalign.test.TestCase
-% tests different usages of aligning multiple functional maps
+    % tests different usages of aligning multiple functional maps
 
 methods (Test)
 
