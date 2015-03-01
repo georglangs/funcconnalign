@@ -1,5 +1,5 @@
 function map = create_functional_map(W, varargin)
-% creates a functional map from the given correlation matrix
+% Creates a functional map from the given correlation matrix.
 %
 % Arguments
 % ---------

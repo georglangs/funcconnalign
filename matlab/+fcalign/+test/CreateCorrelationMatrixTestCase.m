@@ -1,10 +1,10 @@
 classdef CreateCorrelationMatrixTestCase < fcalign.test.TestCase
-   % test usage of creating a sparse correlation matrix
+   % Test usage of creating a sparse correlation matrix.
 
 methods (Test)
 
 function test_default(this)
-% tests default usage of creating a correlation matrix
+    % Tests default usage of creating a correlation matrix.
 
     % define parameters
     n = 16;
@@ -13,7 +13,7 @@ function test_default(this)
     threshold = 0.2;
 
     % define some small random fmri data
-    data = this.create_data('n', n, 's', s);
+    data = this.create_data(n, s);
 
     % make some of the rows be zeros
     data(zero_inds, :) = 0;

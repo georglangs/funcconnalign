@@ -1,19 +1,19 @@
 classdef LaplacianEigsTestCase < fcalign.test.TestCase
-    % test usage of computing the laplacian eigenvalues
+    % Test usage of computing the laplacian eigenvalues.
 
 methods (Test)
 
 function test_default(obj)
-% tests default usage of computing the laplacian eigenvalues
+    % Tests default usage of computing the laplacian eigenvalues.
 
     % define parameters
     n = 16;
-    p = 29;
+    s = 29;
     k = 8;
 
     % make a positive definite matrix
     rng(0);
-    data = rand(n, p);
+    data = rand(n, s);
     W = data * data';
 
     % create the expected eigenvalue decomposition

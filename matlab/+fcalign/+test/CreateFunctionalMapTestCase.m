@@ -14,7 +14,7 @@ function test_default(this)
     t = 2;
 
     % create a correlation matrix
-    matrix = this.create_correlation_matrix('n', n, 's', s);
+    matrix = this.create_correlation_matrix(n, s);
 
     % create the expected map
     [V, l, d] = fcalign.laplacian_eigs(matrix.W, k);

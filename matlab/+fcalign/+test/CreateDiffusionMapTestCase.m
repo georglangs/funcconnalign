@@ -1,10 +1,10 @@
 classdef CreateDiffusionMapTestCase < fcalign.test.TestCase
-    % tests different usages of creating a diffusion map
+    % Tests different usages of creating a diffusion map.
 
 methods (Test)
 
 function test_default(this)
-% tests default usage of creating a functional map
+    % Tests default usage of creating a functional map.
 
     % define parameters
     n = 16;
@@ -14,7 +14,7 @@ function test_default(this)
     t = 1;
 
     % create a correlation matrix
-    matrix = this.create_correlation_matrix('n', n, 's', s);
+    matrix = this.create_correlation_matrix(n, s);
 
     % get the laplacian eigs
     [V, l, d] = fcalign.laplacian_eigs(matrix.W, k);
@@ -23,20 +23,20 @@ function test_default(this)
     norm_factor = sqrt(sum(d));
     inv_sqrt_D = spdiags(d.^-0.5, 0, n, n);
     sqrt_D = spdiags(d.^0.5, 0, n, n);
-    expected.Phi = sqrt_D*V(:, 1:p) / norm_factor;
-    expected.Psi = norm_factor * inv_sqrt_D*V(:, 1:p);
+    expected.Phi = sqrt_D * V(:, 1:p) / norm_factor;
+    expected.Psi = norm_factor * inv_sqrt_D * V(:, 1:p);
 
     if expected.Psi(1, 1) < 0
-    expected.Phi = expected.Phi * -1;
-    expected.Psi = expected.Psi * -1;
+        expected.Phi = expected.Phi * -1;
+        expected.Psi = expected.Psi * -1;
     end
 
     Lt = spdiags(l(1:p).^t, 0, p, p);
-    expected.Gamma = expected.Psi*Lt;
+    expected.Gamma = expected.Psi * Lt;
 
     expected.diffusion_time = t;
     expected.map_dimension = p;
-    expected.delta = (l(p) / l(2))^t;
+    expected.delta = (l(p) / l(2)) ^ t;
     expected.determined_param = 'delta';
 
     % create correlation matrix using method

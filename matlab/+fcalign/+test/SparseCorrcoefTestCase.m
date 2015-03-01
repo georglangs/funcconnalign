@@ -1,9 +1,10 @@
 classdef SparseCorrcoefTestCase < fcalign.test.TestCase
-    % test usage of creating a sparse correlation matrix
+    % Test usage of creating a sparse correlation matrix.
 
 methods (Test)
 
 function test_default(obj)
+    % Tests default usage of the sparse corrcoef function.
 
     % define parameters
     n = 16;
