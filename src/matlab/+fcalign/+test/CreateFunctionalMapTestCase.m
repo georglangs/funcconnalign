@@ -24,8 +24,7 @@ function test_default(this)
 
     % create the actual map
     actual = fcalign.create_functional_map(matrix.W, ...
-            'number_eigs', k, 'map_dimension', dim, ...
-            'diffusion_time', t);
+            'n_eigs', k, 'n_dims', dim, 'diff_time', t);
 
     % verify that actual functional map is equal to expected one
     this.verify_equal_functional_map(actual, expected);

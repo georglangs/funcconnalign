@@ -11,19 +11,19 @@ function data = create_data(this, n, s, varargin)
     %
     % Arguments
     % ---------
-    % n : 1 <= integer
+    % n : 1 <= int
     %   Dimension of data.
-    % s : 1 <= integer
+    % s : 1 <= int
     %   Number of samples (default = 32).
     %
     % Keyword Arguments
     % -----------------
-    % seed : 0 <= integer
+    % seed : 0 <= int
     %   Seed for random number generator (default = 0).
     %
     % Returns
     % -------
-    % data : n x s double
+    % data : n x s numeric
     %   Example data.
 
     parser = inputParser();
@@ -46,21 +46,21 @@ function matrix = create_correlation_matrix(this, n, s, varargin)
     %
     % Arguments
     % ---------
-    % n : 1 <= integer
+    % n : 1 <= int
     %   Dimension of data.
-    % s : 1 <= integer
+    % s : 1 <= int
     %   Number of samples.
     %
     % Keyword Arguments
     % -----------------
-    % threshold : -1 <= double <= 1
+    % threshold : -1 <= numeric <= 1
     %   Correlation threshold (default = 0.1).
     % seed : 0 <= integer
     %   Seed for random number generator (default = 0).
     %
     % Returns
     % -------
-    % data : n x s double
+    % data : n x s numeric
     %   Example correlation matrix.
 
     parser = inputParser();
@@ -89,7 +89,7 @@ function map = create_functional_map(this, n, s, varargin)
     %   Dimension of data.
     % s : 1 <= integer
     %   Number of samples.
-    % threshold : -1 <= double <= 1
+    % threshold : -1 <= numeric <= 1
     %   Correlation threshold (default = 0.1).
     % seed : 0 <= integer
     %   Seed for random number generator (default = 0).
@@ -128,7 +128,7 @@ function transform = create_transform(this, n, varargin)
     %
     % Returns
     % -------
-    % transform : n x n double
+    % transform : n x n numeric
     %   Random transform.
 
     parser = inputParser();
@@ -225,7 +225,7 @@ function verify_equal_transform(this, actual, expected)
     %   actual transform
     % expected : nxn numeric
     %   expected transform
-   
+
     this.verifyEqual(actual, expected, 'RelTol', 0.01);
 end
 
