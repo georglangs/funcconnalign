@@ -8,11 +8,11 @@ function this = SystemException(id, message, varargin)
     %
     % Arguments
     % ---------
-    % id : string
-    %   exception identifier
-    % message : string
-    %   informative message to present to the user
-    
+    % id : str
+    %   Exception identifier.
+    % message : str
+    %   Informative message to present to the user.
+
     parser = inputParser();
     parser.addRequired('id', @(x) validateattributes(x, {'char'}, {'vector'}));
     parser.addRequired('message', @(x) validateattributes(x, {'char'}, {'vector'}));

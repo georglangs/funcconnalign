@@ -1,5 +1,5 @@
 classdef Exception < MException
-    % an exception in the fcalign package.
+    % An exception in the fcalign package.
 
 methods
 
@@ -8,10 +8,10 @@ function this = Exception(id, message, varargin)
     %
     % Arguments
     % ---------
-    % id : string
-    %   exception identifier
-    % message : string
-    %   informative message to present to the user
+    % id : str
+    %   Exception identifier.
+    % message : str
+    %   Informative message to present to the user.
 
     parser = inputParser();
     parser.addRequired('id', @(x) validateattributes(x, {'char'}, {'vector'}));
