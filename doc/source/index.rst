@@ -13,7 +13,7 @@ Use the search box, toolbar and :ref:`genindex` to navigate the documentation.
 If you're interested in contributing to the toolbox, please contact georg.langs@meduniwien.ac.at
 
 Table of Contents
-*****************
+=================
 
 .. toctree::
     :maxdepth: 1
@@ -22,7 +22,8 @@ Table of Contents
     api
     tutorials
     faqs
+    license
     releaseNotes
     acknowledgements
-    license
+    zbibliography
 

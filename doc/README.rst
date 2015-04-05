@@ -14,8 +14,9 @@ In order to write documentation, make sure you have the following installed:
 2. pip 1.3
 3. sphinx 1.2
 4. sphinxcontrib-matlabdomain 0.2.6
-5. readthedocs theme for sphinx
-6. LaTeX (only necessary for pdf generation)
+5. sphinxcontrib-bibtex
+6. readthedocs theme for sphinx
+7. LaTeX (only necessary for pdf generation)
 
 I believe LaTeX is optional for html generation, but is required for pdf
 generation. For OS X, I recommend MacTeX https://www.tug.org/mactex/.
@@ -31,6 +32,7 @@ matlab-domain extension and the readthedocs theme using pip::
     pip install sphinx
     pip install sphinxcontrib-matlabdomain
     pip install sphinx_rtd_theme
+    pip install sphinxcontrib-bibtex
 
 To generate the html files, go to doc/external or doc/internal and run::
 

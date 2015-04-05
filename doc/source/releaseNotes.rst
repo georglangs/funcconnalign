@@ -3,10 +3,17 @@
 Release Notes
 *************
 
-1.0
+0.1
 ===
 
-1.0.0
+0.1.1
 -----
 
-- First public release
+- Reorganization of MATLAB code into package.
+- Added Sphinx documentation.
+
+
+0.1.0
+-----
+
+- Upload of existing code and documentation.
