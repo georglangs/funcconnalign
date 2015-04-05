@@ -4,13 +4,14 @@
    contain the root `toctree` directive.
 
 This is the documentation for the functional connectivity alignment toolbox,
-AKA **fcalign**. It contains instructions on how to :ref:`get started <getting_started>`,
-the :ref:`API reference <api_reference>` of the toolbox, some :ref:`tutorials <tutorials>`
+AKA **fcalign**. It contains instructions on how to
+:ref:`get started <getting_started>`,
+the :ref:`API reference <api_reference>` of the toolbox,
+some :ref:`tutorials <tutorials>`,
+:ref:`how to contribute <contributing>`
 and a list of :ref:`frequently asked questions <faqs>`.
 
 Use the search box, toolbar and :ref:`genindex` to navigate the documentation.
-
-If you're interested in contributing to the toolbox, please contact georg.langs@meduniwien.ac.at
 
 Table of Contents
 =================
@@ -21,6 +22,7 @@ Table of Contents
     gettingStarted
     api
     tutorials
+    contributing
     faqs
     license
     releaseNotes
